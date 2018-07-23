@@ -3,7 +3,7 @@ set -e
 
 
 app_guid=`cf app $1 --guid`
-credentials=`cf curl /v2/apps/$app_guid/env | jq '.system_env_json.VCAP_SERVICES' | jq '.["p-mysql"][0].credentials'`
+credentials=`cf curl /v2/apps/$app_guid/env | jq '.system_env_json.VCAP_SERVICES' | jq '.["cleardb"][0].credentials'`
 
 ip_address=`echo $credentials | jq -r '.hostname'`
 db_name=`echo $credentials | jq -r '.name'`
