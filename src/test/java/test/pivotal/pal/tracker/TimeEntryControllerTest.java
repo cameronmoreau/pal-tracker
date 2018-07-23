@@ -103,7 +103,7 @@ public class TimeEntryControllerTest {
             .when(timeEntryRepository)
             .update(eq(1L), any(TimeEntry.class));
 
-        ResponseEntity response = controller.update(1L, new TimeEntry());
+        ResponseEntity response = controller.update(1L, new TimeEntry(987L, 654L, LocalDate.parse("2017-01-07"), 4));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
