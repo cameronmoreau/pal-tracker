@@ -109,7 +109,7 @@ public class TimeEntryControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        ResponseEntity<TimeEntry> response = controller.delete(1L);
+        ResponseEntity response = controller.delete(1L);
         verify(timeEntryRepository).delete(1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
