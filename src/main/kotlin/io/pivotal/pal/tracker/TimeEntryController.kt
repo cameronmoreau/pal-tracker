@@ -10,7 +10,7 @@ class TimeEntryController(timeEntryRepository: TimeEntryRepository) {
     val timeEntryRepository = timeEntryRepository
 
     @PostMapping("/time-entries")
-    fun create(@RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry> {
+    fun create(@RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry?> {
         val returnedTimeEntry = timeEntryRepository.create(timeEntry)
         return ResponseEntity(returnedTimeEntry, HttpStatus.CREATED)
     }

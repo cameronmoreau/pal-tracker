@@ -1,7 +1,7 @@
 package io.pivotal.pal.tracker
 
 interface TimeEntryRepository {
-    fun create(timeEntry: TimeEntry): TimeEntry
+    fun create(timeEntry: TimeEntry): TimeEntry?
 
     fun find(id: Long): TimeEntry?
 

@@ -9,13 +9,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.mysql.cj.jdbc.MysqlDataSource
 
 
 @SpringBootApplication
 class PalTrackerApplication {
     @Bean
     fun timeEntryRepository(): TimeEntryRepository {
-        return InMemoryTimeEntryRepository()
+        val dataSource = MysqlDataSource()
+        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"))
+
+        return JdbcTimeEntryRepository(dataSource)
     }
 
     @Bean

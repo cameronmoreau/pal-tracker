@@ -1,3 +1,5 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
 buildscript {
 	ext {
 		kotlinVersion = '1.2.41'
@@ -5,11 +7,15 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		classpath("gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:5.1.4")
 	}
 }
 
@@ -17,6 +23,7 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'org.flywaydb.flyway'
 
 group = 'io.pivotal'
 version = '0.0.1-SNAPSHOT'
@@ -45,13 +52,30 @@ dependencies {
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.1")
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
+	compile("org.springframework.boot:spring-boot-starter-jdbc")
+	compile("mysql:mysql-connector-java:8.0.11")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
+def developmentDbUrl = "jdbc:mysql://localhost:3306/tracker_dev?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 bootRun.environment([
 		"WELCOME_MESSAGE": "hello",
+		"SPRING_DATASOURCE_URL": developmentDbUrl
 ])
 
+def testDbUrl = "jdbc:mysql://localhost:3306/tracker_test?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 test.environment([
 		"WELCOME_MESSAGE": "Hello from test",
+		"SPRING_DATASOURCE_URL": testDbUrl
 ])
+
+flyway {
+	url = developmentDbUrl
+	user = "tracker"
+	password = ""
+	locations = ["filesystem:databases/tracker/migrations"]
+}
+
+task testMigrate(type: FlywayMigrateTask) {
+	url = testDbUrl
+}
