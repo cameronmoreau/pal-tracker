@@ -2,6 +2,7 @@ package io.pivotal.pal.tracker.repositories
 
 import io.pivotal.pal.tracker.domain.TimeEntry
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import java.sql.Date
 import java.sql.ResultSet
@@ -10,6 +11,15 @@ import javax.sql.DataSource
 
 class JdbcTimeEntryRepository(dataSource: DataSource): TimeEntryRepository {
     private val jdbcTemplate = JdbcTemplate(dataSource)
+    private val timeEntryRowMapper = RowMapper<TimeEntry>({ rs, _ ->
+        TimeEntry(
+                rs.getLong("id"),
+                rs.getLong("project_id"),
+                rs.getLong("user_id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getInt("hours")
+        )
+    })
 
     override fun create(timeEntry: TimeEntry): TimeEntry? {
         val sql = "INSERT INTO time_entries (project_id, user_id, date, hours) VALUES (?, ?, ?, ?)"
@@ -38,7 +48,7 @@ class JdbcTimeEntryRepository(dataSource: DataSource): TimeEntryRepository {
 
             query
         }, {
-            fetchedTimeEntry = deserializeTimeEntry(it)
+            fetchedTimeEntry = timeEntryRowMapper.mapRow(it, 0)
         })
 
         return fetchedTimeEntry
@@ -49,7 +59,7 @@ class JdbcTimeEntryRepository(dataSource: DataSource): TimeEntryRepository {
         val fetchedTimeEntries: MutableList<TimeEntry> = mutableListOf()
 
         jdbcTemplate.query(sql, {
-            fetchedTimeEntries.add(deserializeTimeEntry(it))
+            fetchedTimeEntries.add(timeEntryRowMapper.mapRow(it, 0))
         })
 
         return fetchedTimeEntries
@@ -81,15 +91,5 @@ class JdbcTimeEntryRepository(dataSource: DataSource): TimeEntryRepository {
 
             query
         })
-    }
-
-    private fun deserializeTimeEntry(rs: ResultSet): TimeEntry {
-        return TimeEntry(
-                rs.getLong("id"),
-                rs.getLong("project_id"),
-                rs.getLong("user_id"),
-                rs.getDate("date").toLocalDate(),
-                rs.getInt("hours")
-        )
     }
 }
