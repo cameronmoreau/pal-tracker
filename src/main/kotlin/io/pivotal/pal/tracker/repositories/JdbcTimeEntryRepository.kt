@@ -1,5 +1,6 @@
-package io.pivotal.pal.tracker
+package io.pivotal.pal.tracker.repositories
 
+import io.pivotal.pal.tracker.domain.TimeEntry
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import java.sql.Date

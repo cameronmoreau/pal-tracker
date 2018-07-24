@@ -1,4 +1,6 @@
-package io.pivotal.pal.tracker
+package io.pivotal.pal.tracker.repositories
+
+import io.pivotal.pal.tracker.domain.TimeEntry
 
 interface TimeEntryRepository {
     fun create(timeEntry: TimeEntry): TimeEntry?

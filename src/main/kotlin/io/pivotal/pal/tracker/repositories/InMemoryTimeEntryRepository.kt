@@ -1,7 +1,9 @@
-package io.pivotal.pal.tracker
+package io.pivotal.pal.tracker.repositories
+
+import io.pivotal.pal.tracker.domain.TimeEntry
 
 class InMemoryTimeEntryRepository : TimeEntryRepository {
-    private var timeEntries: MutableMap<Long,TimeEntry> = mutableMapOf()
+    private var timeEntries: MutableMap<Long, TimeEntry> = mutableMapOf()
     private var nextId: Long = 1L
 
     override fun create(timeEntry: TimeEntry): TimeEntry {

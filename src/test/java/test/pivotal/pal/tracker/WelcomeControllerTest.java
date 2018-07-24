@@ -1,6 +1,6 @@
 package test.pivotal.pal.tracker;
 
-import io.pivotal.pal.tracker.WelcomeController;
+import io.pivotal.pal.tracker.controllers.WelcomeController;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
