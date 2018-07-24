@@ -8,7 +8,7 @@ import java.sql.Statement
 import javax.sql.DataSource
 
 class JdbcTimeEntryRepository(dataSource: DataSource): TimeEntryRepository {
-    val jdbcTemplate = JdbcTemplate(dataSource)
+    private val jdbcTemplate = JdbcTemplate(dataSource)
 
     override fun create(timeEntry: TimeEntry): TimeEntry? {
         val sql = "INSERT INTO time_entries (project_id, user_id, date, hours) VALUES (?, ?, ?, ?)"
