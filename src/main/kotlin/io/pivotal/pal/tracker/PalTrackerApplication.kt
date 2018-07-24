@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.pivotal.pal.tracker.repositories.JdbcTimeEntryRepository
-import io.pivotal.pal.tracker.repositories.TimeEntryRepository
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.actuate.metrics.rich.InMemoryRichGaugeRepository
+import org.springframework.boot.actuate.metrics.writer.DefaultCounterService
+import org.springframework.boot.actuate.metrics.writer.DefaultGaugeService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
@@ -17,9 +19,13 @@ import javax.sql.DataSource
 @SpringBootApplication
 class PalTrackerApplication {
     @Bean
-    fun timeEntryRepository(dataSource: DataSource): TimeEntryRepository {
-        return JdbcTimeEntryRepository(dataSource)
-    }
+    fun timeEntryRepository(dataSource: DataSource) = JdbcTimeEntryRepository(dataSource)
+
+    @Bean
+    fun counter() = DefaultCounterService(InMemoryRichGaugeRepository())
+
+    @Bean
+    fun gauge() = DefaultGaugeService(InMemoryRichGaugeRepository())
 
     @Bean
     fun jsonObjectMapper(): ObjectMapper {
