@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @EnableWebSecurity
 class SecurityConfiguration(
-        @Value("\${HTTPS_DISABLED}") var httpsDisabled: Boolean) : WebSecurityConfigurerAdapter() {
+        @Value("\${HTTPS_DISABLED:false}") var httpsDisabled: Boolean) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
 
